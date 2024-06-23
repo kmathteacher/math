@@ -1,4 +1,4 @@
-#f(z) = e^(iz)를 html로 만들 수 있는 코드
+# f(z) = e^(iz)를 html로 만들 수 있는 코드
 
 import numpy as np
 import plotly.graph_objs as go
