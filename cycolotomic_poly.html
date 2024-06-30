@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z^n = 1 Solutions Visualizer</title>
+    <!-- Load Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        /* Optional: CSS for styling the slider and plot */
+        .container {
+            margin: 20px;
+            width: 1000px;
+        }
+        .plot-container {
+            width: 600px; /* 2/3 of 900px */
+            height: 600px; /* 2/3 of 900px */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Z^n = 1 Solutions Visualizer</h2>
+        
+        <!-- Slider for parameter 'n' -->
+        <label for="slider">Choose a value for 'n' (1 to 60):</label>
+        <input type="range" min="1" max="60" value="1" step="1" class="slider" id="nSlider">
+        <span id="nValue">1</span>
+        
+        <!-- Plotly.js graph container -->
+        <div id="plot" class="plot-container"></div>
+    </div>
+
+    <script>
+        // Function to update the graph based on slider value
+        function updateGraph() {
+            // Get the value of 'n' from the slider
+            let n = parseInt(document.getElementById("nSlider").value);
+            document.getElementById("nValue").textContent = n; // Update displayed value
+            
+            // Calculate roots of z^n = 1
+            let roots = [];
+            for (let k = 0; k < n; k++) {
+                let angle = (2 * Math.PI * k) / n;
+                let realPart = Math.cos(angle);
+                let imagPart = Math.sin(angle);
+                roots.push({ real: realPart, imag: imagPart, angle: angle });
+            }
+
+            // Plot the roots using Plotly.js
+            let data = [{
+                x: roots.map(root => root.real),
+                y: roots.map(root => root.imag),
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Polar Form',
+                marker: {
+                    size: 10, // Increase marker size
+                    opacity: 0.6 // Reduce opacity to see overlapping points better
+                },
+                text: roots.map(root => `n = ${n}, θ = ${fractionalAngle(roots[0].angle, n)} radians`)
+            }, {
+                x: roots.map(root => root.real),
+                y: roots.map(root => root.imag),
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Rectangular Form',
+                marker: {
+                    size: 10, // Increase marker size
+                    opacity: 0.6 // Reduce opacity to see overlapping points better
+                },
+                text: roots.map(root => `n = ${n}, z = ${root.real.toFixed(2)} + ${root.imag.toFixed(2)}i`)
+            }];
+
+            let layout = {
+                title: `Solutions of z^n = 1 for n = ${n}`,
+                width: 600 * 1.5, // 1.5 times the original width
+                height: 600 * 1.5, // 1.5 times the original height
+                xaxis: {
+                    title: 'Real Part',
+                    range: [-1.2, 1.2]
+                },
+                yaxis: {
+                    title: 'Imaginary Part',
+                    range: [-1.2, 1.2]
+                },
+                hovermode: 'closest' // Change hover mode to 'closest'
+            };
+
+            Plotly.newPlot('plot', data, layout);
+        }
+
+        // Function to convert radians to a fractional representation with π
+        function fractionalAngle(angle, n) {
+            let angleFraction = angle / (2 * Math.PI / n);
+            if (angleFraction === 0) return '0π';
+            if (angleFraction === 1) return 'π';
+            if (angleFraction === 2) return '2π';
+            if (angleFraction === -1) return '-π';
+            if (Number.isInteger(angleFraction)) return angleFraction + 'π';
+            let numerator = Math.round(angle / (Math.PI / 100));
+            return `${2*{numerator}}π/${n}`;
+        }
+
+        // Initial plot when the page loads
+        updateGraph();
+
+        // Add event listener to update plot when slider value changes
+        document.getElementById("nSlider").addEventListener("input", updateGraph);
+    </script>
+</body>
+</html>
