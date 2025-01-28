@@ -1,3 +1,5 @@
+# 각 점에 점의 이름에 대한 레이블 달기
+
 from manim import *
 
 
