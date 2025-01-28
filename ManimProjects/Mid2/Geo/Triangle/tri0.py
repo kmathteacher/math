@@ -1,4 +1,7 @@
-   from manim import *
+# polygon: 점을 설정한 뒤 해당 점을 이어서 만들어지는 도형
+# 삼각형의 텍스트에서 이등변삼각형을 만들기
+
+from manim import *
 
 class Etude3(Scene):
     def construct(self):
